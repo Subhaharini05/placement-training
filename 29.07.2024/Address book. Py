@@ -1,0 +1,20 @@
+class AddressBook:
+    def __init__(self):
+        self.contacts = {}
+
+    def add_contact(self, name, phone):
+        self.contacts[name] = phone
+
+    def get_contact(self, name):
+        return self.contacts.get(name, "Contact not found")
+
+    def display_contacts(self):
+        for name, phone in self.contacts.items():
+            print(f"{name}: {phone}")
+
+address_book = AddressBook()
+address_book.add_contact("Alice", "123-456-7890")
+address_book.add_contact("Bob", "987-654-3210")
+print("Address Book:")
+address_book.display_contacts()
+print("Get Contact (Alice):", address_book.get_contact("Alice"))
