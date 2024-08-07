@@ -1,0 +1,21 @@
+import re
+
+def chatbot_response(user_input):
+    responses = {
+        r'hello|hi|hey': 'Hello! How can I help you today?',
+        r'how are you': 'I am just a bot, but I am functioning as expected!',
+        r'what is your name': 'I am a chatbot created by OpenAI.',
+        r'bye|goodbye': 'Goodbye! Have a great day!'
+    }
+    
+    for pattern, response in responses.items():
+        if re.search(pattern, user_input, re.IGNORECASE):
+            return response
+    return "I'm not sure how to respond to that."
+
+while True:
+    user_input = input("You: ")
+    if user_input.lower() in ["bye", "goodbye"]:
+        print("Chatbot: Goodbye! Have a great day!")
+        break
+    print("Chatbot:", chatbot_response(user_input))
