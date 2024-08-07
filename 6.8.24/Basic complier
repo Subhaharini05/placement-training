@@ -1,0 +1,78 @@
+import re
+
+class BasicCompiler:
+    def __init__(self):
+        self.variables = {}
+
+    def parse(self, code):
+        lines = code.strip().split('\n')
+        for line in lines:
+            self.evaluate(line.strip())
+
+    def evaluate(self, expression):
+        if '=' in expression:
+            var, expr = map(str.strip, expression.split('='))
+            self.variables[var] = self.calculate(expr)
+        else:
+            print(self.calculate(expression))
+
+    def calculate(self, expression):
+        tokens = re.findall(r'\b\d+\b|\b[a-zA-Z_]\w*\b|[+*/()-]', expression)
+        output = []
+        operators = []
+
+        for token in tokens:
+            if token.isnumeric():
+                output.append(int(token))
+            elif token in self.variables:
+                output.append(self.variables[token])
+            elif token == '(':
+                operators.append(token)
+            elif token == ')':
+                while operators and operators[-1] != '(':
+                    output.append(operators.pop())
+                operators.pop()
+            else:
+                while operators and self.precedence(token) <= self.precedence(operators[-1]):
+                    output.append(operators.pop())
+                operators.append(token)
+
+        while operators:
+            output.append(operators.pop())
+
+        return self.evaluate_rpn(output)
+
+    def evaluate_rpn(self, rpn):
+        stack = []
+        for token in rpn:
+            if isinstance(token, int):
+                stack.append(token)
+            else:
+                b = stack.pop()
+                a = stack.pop()
+                if token == '+':
+                    stack.append(a + b)
+                elif token == '-':
+                    stack.append(a - b)
+                elif token == '*':
+                    stack.append(a * b)
+                elif token == '/':
+                    stack.append(a / b)
+        return stack[0]
+
+    def precedence(self, op):
+        if op in '+-':
+            return 1
+        if op in '*/':
+            return 2
+        return 0
+
+# Example code
+code = """
+x = 3 + 5
+y = x * 2
+z = y / (1 + 1)
+print z
+"""
+compiler = BasicCompiler()
+compiler.parse(code)
