@@ -1,0 +1,19 @@
+import re
+from collections import Counter
+
+def analyze_text(file_path):
+    with open(file_path, 'r') as file:
+        text = file.read()
+    
+    words = re.findall(r'\b\w+\b', text.lower())
+    word_count = Counter(words)
+    
+    emails = re.findall(r'\b[\w.-]+?@\w+?\.\w+?\b', text)
+    urls = re.findall(r'https?://\S+', text)
+    
+    return word_count, emails, urls
+
+word_count, emails, urls = analyze_text('example.txt')
+print("Word frequencies:", word_count)
+print("Emails:", emails)
+print("URLs:", urls)
