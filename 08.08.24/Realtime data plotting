@@ -1,0 +1,21 @@
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import random
+
+fig, ax = plt.subplots()
+x_data, y_data = [], []
+ln, = plt.plot([], [], 'b-')
+
+def init():
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 10)
+    return ln,
+
+def update(frame):
+    x_data.append(frame)
+    y_data.append(random.uniform(0, 10))
+    ln.set_data(x_data, y_data)
+    return ln,
+
+ani = animation.FuncAnimation(fig, update, frames=range(10), init_func=init, blit=True)
+plt.show()
