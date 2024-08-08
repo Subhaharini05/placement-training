@@ -1,0 +1,35 @@
+from collections import deque
+
+def is_valid_move(maze, x, y, visited):
+    return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == 0 and not visited[x][y]
+
+def bfs(maze, start, end):
+    queue = deque([(*start, [])])
+    visited = [[False] * len(maze[0]) for _ in range(len(maze))]
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    
+    while queue:
+        x, y, path = queue.popleft()
+        if (x, y) == end:
+            return path + [(x, y)]
+        
+        visited[x][y] = True
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if is_valid_move(maze, nx, ny, visited):
+                queue.append((nx, ny, path + [(x, y)]))
+    
+    return []
+
+maze = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0]
+]
+
+start = (0, 0)
+end = (4, 4)
+solution = bfs(maze, start, end)
+print("Solution path:", solution)
